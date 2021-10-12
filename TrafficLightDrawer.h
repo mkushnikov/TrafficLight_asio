@@ -7,7 +7,7 @@
 class TrafficLightDrawer
 {
 private:
-    // РЎРёРјРІРѕР»СЊРЅР°СЏ РіСЂР°С„РёРєР° РґР»СЏ С†РІРµС‚РѕРІ СЃРІРµС‚РѕС„РѕСЂР°
+    // Символьная графика для цветов светофора
     static const std::vector<std::string_view> emptyCircle_;
 
     static const std::vector<std::string_view> redCircle_;
@@ -16,16 +16,16 @@ private:
 
     static const std::vector<std::string_view> greenCircle_;
 
-    // Р¤СѓРЅРєС†РёСЏ РґР»СЏ РѕС‚СЂРёСЃРѕРІРєРё С†РІРµС‚РѕРІ СЃРІРµС‚РѕС„РѕСЂР°
-    void showLight(const std::vector<std::string_view> &circle);
+    // Функция для отрисовки цветов светофора
+    void showLight(const std::vector<std::string_view>& circle);
 
 public:
-    // Р§РёСЃС‚РєР° РєРѕРЅСЃРѕР»Рё
+    // Чистка консоли
     void clearConsole();
-    // РРЅС„РѕСЂРјР°С†РёСЏ РѕР± СѓРїСЂР°РІР»РµРЅРёРё
+    // Информация об управлении
     void showControllInfo();
 
-    // Р¤СѓРЅРєС†РёРё РґР»СЏ РѕС‚СЂРёСЃРѕРІРєРё СЃРІРµС‚РѕС„РѕСЂР° РІ РєРѕРЅРєСЂРµС‚РЅРѕРј СЃС‚РµР№С‚Рµ
+    // Функции для отрисовки светофора в конкретном стейте
     void drawEmpty();
     void drawRed();
     void drawYellow();

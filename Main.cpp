@@ -1,7 +1,7 @@
 #include "TrafficLight.h"
 #include "Input.h"
 
-#include <thread>
+#include <boost/thread.hpp>
 
 int main(int argc, char* argv[])
 {
@@ -9,9 +9,9 @@ int main(int argc, char* argv[])
     Input myInput;
 
     myInput.addSub([&](char k)
-                   { myTL.handlePressedKey(k); });
+        { myTL.handlePressedKey(k); });
 
-    std::thread input(&Input::handleInput, myInput);
+    boost::thread input(&Input::handleInput, myInput);
 
     myTL.emulateTrafficLight();
 

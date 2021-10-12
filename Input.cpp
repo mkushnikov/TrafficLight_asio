@@ -6,7 +6,7 @@ void Input::handleInput()
 {
     while (true)
     {
-        pressedKey_ = getch();
+        pressedKey_ = _getch();
 
         notifySubs();
     }

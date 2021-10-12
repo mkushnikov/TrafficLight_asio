@@ -1,90 +1,105 @@
 #ifndef TRAFFICLIGHT_H_
 #define TRAFFICLIGHT_H_
 
-#include "Timer.h"
+#include <boost/asio.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/timer/timer.hpp>
+
 #include "TrafficLightDrawer.h"
 
 class TrafficLight
 {
 private:
-    // РЎРїРёСЃРѕРє СЃРѕСЃС‚РѕСЏРЅРёР№ СЃРІРµС‚РѕС„РѕСЂР° РґР»СЏ РѕС‚СЂРёСЃРѕРІРєРё
-    enum STATES
-    {
-        EMPTY,
-        RED,
-        YELLOW,
-        GREEN
-    };
+	// Список состояний светофора для отрисовки
+	enum class STATES
+	{
+		EMPTY,
+		RED,
+		YELLOW,
+		GREEN
+	};
 
-    // РЎРїРёСЃРѕРє РЅР°РїСЂР°РІР»РµРЅРёР№ РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ С†РІРµС‚РѕРІ
-    enum SWITCH_DIRECTION
-    {
-        FORWARD,
-        REVERSE
-    };
+	// Список направлений переключения цветов
+	enum class SWITCH_DIRECTION
+	{
+		FORWARD,
+		REVERSE
+	};
 
-    // РўР°Р№РјРёРЅРі РґР»СЏ РєСЂР°СЃРЅРѕРіРѕ С†РІРµС‚Р°
-    static const int redTimeSwitch_;
-    // РўР°Р№РјРёРЅРі РґР»СЏ Р·РµР»С‘РЅРѕРіРѕ С†РІРµС‚Р°
-    static const int greenTimeSwitch_;
-    // Р§Р°СЃС‚РѕС‚Р° РјРёРіР°РЅРёСЏ Р¶С‘Р»С‚РѕРіРѕ
-    static const int yellowTimeBlinkFrequency_;
-    //РњР°РєСЃ. РєРѕР»-РІРѕ РјРёРіР°РЅРёР№ РґР»СЏ Р¶С‘Р»С‚РѕРіРѕ
-    static const int yellowSwitchesMaxCount_;
+	// Тайминг для красного цвета
+	static const int redTimeSwitch_;
+	// Тайминг для зелёного цвета
+	static const int greenTimeSwitch_;
+	// Частота мигания жёлтого
+	static const int yellowTimeBlinkFrequency_;
+	//Макс. кол-во миганий для жёлтого
+	static const int yellowSwitchesMaxCount_;
 
-    // РЎС‡С‘С‚С‡РёРє РјРёРіР°РЅРёР№
-    int currentYellowSwitchesCount_;
+	// Счётчик миганий
+	int currentYellowSwitchesCount_;
 
-    // РћРїСЂРµРґРµР»СЏРµС‚, Р·Р°РїСѓС‰РµРЅРѕ РїРµСЂРµРєР»СЋС‡РµРЅРёРµ РёР»Рё РЅРµС‚
-    bool isStopped_;
-    // РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ Р·Р°РІРµСЂС€РµРЅРёСЏ СЂР°Р±РѕС‚С‹ СЃРІРµС‚РѕС„РѕСЂР°
-    bool isFinished_;
-    // РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ СЃРјРµРЅС‹ СЃРѕСЃС‚РѕСЏРЅРёР№ СЃРІРµС‚РѕС„РѕСЂР° РїРѕ РІСЂРµРјСЏ РјРёРіР°РЅРёСЏ Р¶С‘Р»С‚РѕРіРѕ
-    bool isYellowBlinking_;
+	// Определяет, запущено переключение или нет
+	bool isStopped_;
+	// Используется для завершения работы светофора
+	bool isFinished_;
+	// Используется для смены состояний светофора по время мигания жёлтого
+	bool isYellowBlinking_;
 
-    // РЎРѕРґРµСЂР¶РёС‚ С‚РµРєСѓС‰РµРµ РІСЂРµРјСЏ РјРёРіР°РЅРёСЏ
-    int currentSwitchTime_;
+	// Содержит текущее время мигания
+	int currentSwitchTime_;
 
-    // РўРµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ СЃРІРµС‚РѕС„РѕСЂР°
-    STATES currentTrafficLightState_;
-    // РќР°РїСЂР°РІР»РµРЅРёРµ РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ
-    SWITCH_DIRECTION currentSwitchDirection_;
+	// Текущее состояние светофора
+	STATES currentTrafficLightState_;
+	// Направление переключения
+	SWITCH_DIRECTION currentSwitchDirection_;
 
-    //РўР°Р№РјРµСЂ РґР»СЏ РїРµСЂРµРєР»СЋС‡РµРЅРёР№ СЃРІРµС‚РѕС„РѕСЂР°
-    Timer myTimer_;
-    //РџРµСЂРµРјРµРЅРЅР°СЏ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РєРѕР»-РІР° РІСЂРµРјРµРЅРё РІ СЃР»СѓС‡Р°Рµ РџР°СѓР·С‹
-    std::chrono::milliseconds timeRemainingUntilSwitch_;
+	//IO
+	boost::shared_ptr<boost::asio::io_context> myIo_;
+	//boost::shared_ptr<boost::asio::io_context::work> myWork_;
 
-    // РћС‚СЂРёСЃРѕРІРєР° СЃС‚РµР№С‚РѕРІ СЃРІРµС‚РѕС„РѕСЂР°
-    TrafficLightDrawer trafficLightDrawer_;
-    // РћС‚СЂРёСЃРѕРІС‹РІР°РµРј РЅСѓР¶РЅС‹Р№ С†РІРµС‚ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃС‚РµР№С‚Р°
-    void drawTL(TrafficLight::STATES currentState);
+	//Таймер для переключений светофора
+	boost::asio::deadline_timer myTimer_;
 
-    // РћР±РЅРѕРІР»СЏРµРј СЃС‚РµР№С‚ СЃРІРµС‚РѕС„РѕСЂР°
-    void updateTLState();
+	//Флаг, запущен ли таймер
+	bool isTimerRunning_;
 
-    //Р¤СѓРЅРєС†РёРё РґР»СЏ СЂРµР°РєС†РёРё РЅР° РІРІРѕРґ
-    void onPauseButtonPressed();
-    void onStartButtonPressed();
-    void onExitButtonPressed();
+	//Переменная для хранения кол-ва времени в случае Паузы
+	int timeRemainingUntilSwitch_;
+
+	// Отрисовка стейтов светофора
+	TrafficLightDrawer trafficLightDrawer_;
+	// Отрисовываем нужный цвет в зависимости от стейта
+	void drawTL(TrafficLight::STATES currentState);
+
+	// Обновляем стейт светофора
+	void updateTLState();
+
+	//Функции для реакции на ввод
+	void onPauseButtonPressed();
+	void onStartButtonPressed();
+	void onExitButtonPressed();
 
 public:
-    //РћСЃРЅРѕРІРЅРѕР№ С†РёРєР» СЂР°Р±РѕС‚С‹ СЃРІРµС‚РѕС„РѕСЂР°
-    void emulateTrafficLight();
+	//Основной цикл работы светофора
+	void emulateTrafficLight();
 
-    //РћР±СЂР°Р±РѕС‚С‡РёРє РІРІРѕРґР°
-    void handlePressedKey(char pressedKey);
+	//Обработчик ввода
+	void handlePressedKey(char pressedKey);
 
-    TrafficLight()
-        : isStopped_(false),
-          isFinished_(false),
-          isYellowBlinking_(false),
-          currentSwitchTime_(0),
-          currentTrafficLightState_(STATES::EMPTY),
-          currentSwitchDirection_(SWITCH_DIRECTION::FORWARD),
-          timeRemainingUntilSwitch_(std::chrono::milliseconds(0)),
-          currentYellowSwitchesCount_(0)
-    {
-    }
+	TrafficLight()
+		: isStopped_(false),
+		isFinished_(false),
+		isYellowBlinking_(false),
+		currentSwitchTime_(0),
+		currentTrafficLightState_(TrafficLight::STATES::EMPTY),
+		currentSwitchDirection_(TrafficLight::SWITCH_DIRECTION::FORWARD),
+		timeRemainingUntilSwitch_(0),
+		currentYellowSwitchesCount_(0),
+		myIo_(new boost::asio::io_context),
+		myTimer_(*myIo_),
+		isTimerRunning_(false)
+	{
+
+	}
 };
 #endif

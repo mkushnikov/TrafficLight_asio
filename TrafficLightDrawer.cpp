@@ -26,7 +26,7 @@ const std::vector<std::string_view> TrafficLightDrawer::emptyCircle_ = {
     "|         |",
     " \\       / ",
     "  \\     /  ",
-    "    ---    "};
+    "    ---    " };
 
 const std::vector<std::string_view> TrafficLightDrawer::redCircle_ = {
     "    ---   ",
@@ -35,7 +35,7 @@ const std::vector<std::string_view> TrafficLightDrawer::redCircle_ = {
     "| RRRRRRR |",
     " \\ RRRRR / ",
     "  \\ RRR /  ",
-    "    ---    "};
+    "    ---    " };
 
 const std::vector<std::string_view> TrafficLightDrawer::yellowCircle_ = {
     "    ---   ",
@@ -44,7 +44,7 @@ const std::vector<std::string_view> TrafficLightDrawer::yellowCircle_ = {
     "| YYYYYYY |",
     " \\ YYYYY / ",
     "  \\ YYY /  ",
-    "    ---    "};
+    "    ---    " };
 
 const std::vector<std::string_view> TrafficLightDrawer::greenCircle_ = {
     "    ---   ",
@@ -53,9 +53,9 @@ const std::vector<std::string_view> TrafficLightDrawer::greenCircle_ = {
     "| GGGGGGG |",
     " \\ GGGGG / ",
     "  \\ GGG /  ",
-    "    ---    "};
+    "    ---    " };
 
-void TrafficLightDrawer::showLight(const std::vector<std::string_view> &circle)
+void TrafficLightDrawer::showLight(const std::vector<std::string_view>& circle)
 {
     for (auto line : circle)
     {
