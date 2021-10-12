@@ -5,16 +5,16 @@
 
 int main(int argc, char* argv[])
 {
-    TrafficLight myTL;
-    Input myInput;
+	TrafficLight myTL;
+	Input myInput;
 
-    myInput.addSub([&](char k)
-        { myTL.handlePressedKey(k); });
+	myInput.addSub([&](char k)
+		{ myTL.handlePressedKey(k); });
 
-    boost::thread input(&Input::handleInput, myInput);
+	boost::thread input(&Input::handleInput, myInput);
 
-    myTL.emulateTrafficLight();
+	myTL.emulateTrafficLight();
 
-    input.detach();
-    return 0;
+	input.detach();
+	return 0;
 }
